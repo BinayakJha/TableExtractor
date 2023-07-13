@@ -6,6 +6,11 @@ pdf_name = input("Enter the name of the pdf file with .pdf: ")
 output_format = input("Enter the output format (csv or excel): ")
 initial_page_input = int(input("Enter the initial page number you want to start extract data from: "))
 final_page_input = int(input("Enter the final page number you want to extract data from: "))
+def merge_tables(tables):
+    merged_table = pd.concat(tables)
+    return merged_table
+
+merge_or_not = input("Do you want to merge the tables? (y/n): ")
 
 pdf = pdfplumber.open(pdf_name)
 tables = []
@@ -24,4 +29,18 @@ for page in pdf.pages[initial_page_input-1:final_page_input]:
             else:
                 print("Invalid output format. Please enter either csv or excel.")
                 break
+
 pdf.close()
+
+if merge_or_not == 'y':
+    merged_table = merge_tables(tables)
+    if output_format == "csv":
+        merged_table.to_csv(f'tables/merged_table.csv', index=False)
+        print("Tables merged.")
+    elif output_format == "excel":
+        merged_table.to_excel(f'tables/merged_table.xlsx', index=False)
+        print("Tables merged.")
+    else:
+        print("Invalid output format. Please enter either csv or excel.")
+else:
+    print("Tables not merged.")
