@@ -3,13 +3,15 @@ import pandas as pd
 import os
 
 pdf_name = input("Enter the name of the pdf file with .pdf: ")
-pdf = pdfplumber.open(pdf_name)
-
-tables = []
 output_format = input("Enter the output format (csv or excel): ")
-for page in pdf.pages:
+initial_page_input = int(input("Enter the initial page number you want to start extract data from: "))
+final_page_input = int(input("Enter the final page number you want to extract data from: "))
+
+pdf = pdfplumber.open(pdf_name)
+tables = []
+for page in pdf.pages[initial_page_input-1:final_page_input]:
     if table := page.extract_table(): # extract_table() returns None if there are no tables
-        print(f'Page {str(page.page_number)}')
+        print(f'Page {str(page.page_number)} table extracted.')
         tables.append(pd.DataFrame(table[1:], columns=table[0]))
         # save all the tables in a folder called tables
         if not os.path.exists('tables'):
