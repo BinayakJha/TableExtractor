@@ -2,7 +2,8 @@ import pdfplumber
 import pandas as pd
 import os
 
-pdf = pdfplumber.open("data.pdf")
+pdf_name = input("Enter the name of the pdf file with .pdf: ")
+pdf = pdfplumber.open(pdf_name)
 tables = []
 for page in pdf.pages:
     if table := page.extract_table(): # extract_table() returns None if there are no tables
